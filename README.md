@@ -4,34 +4,51 @@
 
 ### users
 
-* user_id: primary
-* email: text
-* name: text
+* id: integer
+* email: string
+* name: string
+* token: string # for google login
+* created: date
+* modified: date
 
 ### events
-* title: text
-* description: text
-* locale: text
+* id: integer
+* title: sting
+* description: string
+* locale: string
 * event_type_id: ref
+* created: date
+* modified: date
 
 ### event_types ( 春合宿, 新歓等 )
-* event_type_id: primary
-* name: text
+* id: integer
+* name: string
+* created: date
+* modified: date
 
 ### event_users ( Eventに参加しているユーザー )
-* user_id: ref
-* event_id: ref
+* id: integer
+* user_id: integer
+* event_id: integer
 * invited: bool
+* created: date
+* modified: date
 
 ### event_dates ( イベント候補日 )
-* event_id: ref
+* id: integer
+* event_id: integer
 * prospective_date: date
 * prospective_time: time
+* created: date
+* modified: date
 
 ### event_date_users (イベント候補日に対するユーザーの出席確認 )
-* event_date_id: ref
-* user_id: ref
-* status: enum
+* id: integer
+* event_date_id: integer
+* user_id: integer
+* status: integer
+* created: date
+* modified: date
 
 ## APIs
 ### GET `/api/events`
