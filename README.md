@@ -37,7 +37,9 @@
 ### GET `/api/events`
 イベント一覧を返す
 
-```
+#### Response Body
+
+```json
 [
   {
     "event_id": 1,
@@ -49,7 +51,7 @@
       {
         "user_id": 1,
         "name": "TaikiFnit",
-        "email": g031o167@s.iwate-pu.ac.jp"
+        "email": "g031o167@s.iwate-pu.ac.jp"
       }
     ],
     "event_dates": [
@@ -67,5 +69,25 @@
     ]
   }
 ]
+```
+
+### POST `/api/events`
+
+#### Request Body
+
+```json
+{
+  "title": "2018年度 夏合宿",
+  "description": "2018年度夏合宿の出席登録です",
+  "locale": "大沢温泉",
+  "event_type_id": 1,
+  "event_user_ids": [1,2,3,4,5],
+  "event_dates": [
+    {
+      "date": "2018/06/12",
+      "time": "19:00"
+    }
+  ]
+}
 ```
 
