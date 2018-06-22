@@ -59,25 +59,25 @@
 ```json
 [
   {
-    "event_id": 1,
+    "id": 1,
     "title": "2018年度 夏合宿",
     "description": "2018年度夏合宿の出席登録です",
     "locale": "大沢温泉",
-    "event_type": "夏合宿",
-    "event_users": [
+    "type": "夏合宿",
+    "users": [
       {
-        "user_id": 1,
+        "id": 1,
         "name": "TaikiFnit",
         "email": "g031o167@s.iwate-pu.ac.jp"
       }
     ],
-    "event_dates": [
+    "dates": [
       {
-        "event_date": "2018/06/12",
-        "event_time": "19:00",
+        "date": "2018/06/12",
+        "time": "19:00",
         "users": [
           {
-            "user_id": 1,
+            "id": 1,
             "name": "TaikiFnit",
             "status": "○"
           }
@@ -97,9 +97,9 @@
   "title": "2018年度 夏合宿",
   "description": "2018年度夏合宿の出席登録です",
   "locale": "大沢温泉",
-  "event_type_id": 1,
-  "event_user_ids": [1,2,3,4,5],
-  "event_dates": [
+  "type_id": 1,
+  "user_ids": [1,2,3,4,5],
+  "dates": [
     {
       "date": "2018/06/12",
       "time": "19:00"
