@@ -91,3 +91,9 @@
 }
 ```
 
+### Resposne Body
+
+```json
+{
+  "status": true
+}
