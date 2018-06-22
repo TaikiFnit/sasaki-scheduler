@@ -1,51 +1,71 @@
-# CakePHP Application Skeleton
+# Sasaki Scheduler 
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
+## Models
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 3.x.
+### users
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+* user_id: primary
+* email: text
+* name: text
 
-## Installation
+### events
+* title: text
+* description: text
+* locale: text
+* event_type_id: ref
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+### event_types ( 春合宿, 新歓等 )
+* event_type_id: primary
+* name: text
 
-If Composer is installed globally, run
+### event_users ( Eventに参加しているユーザー )
+* user_id: ref
+* event_id: ref
+* invited: bool
 
-```bash
-composer create-project --prefer-dist cakephp/app
+### event_dates ( イベント候補日 )
+* event_id: ref
+* prospective_date: date
+* prospective_time: time
+
+### event_date_users (イベント候補日に対するユーザーの出席確認 )
+* event_date_id: ref
+* user_id: ref
+* status: enum
+
+## APIs
+### GET `/api/events`
+イベント一覧を返す
+
+```
+[
+  {
+    "event_id": 1,
+    "title": "2018年度 夏合宿",
+    "description": "2018年度夏合宿の出席登録です",
+    "locale": "大沢温泉",
+    "event_type": "夏合宿",
+    "event_users": [
+      {
+        "user_id": 1,
+        "name": "TaikiFnit",
+        "email": g031o167@s.iwate-pu.ac.jp"
+      }
+    ],
+    "event_dates": [
+      {
+        "event_date": "2018/06/12",
+        "event_time": "19:00",
+        "users": [
+          {
+            "user_id": 1,
+            "name": "TaikiFnit",
+            "status": "○"
+          }
+        ]
+      }
+    ]
+  }
+]
 ```
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
-
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
-
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
-
-```bash
-bin/cake server -p 8765
-```
-
-Then visit `http://localhost:8765` to see the welcome page.
-
-## Update
-
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
-
-## Configuration
-
-Read and edit `config/app.php` and setup the `'Datasources'` and any other
-configuration relevant for your application.
-
-## Layout
-
-The app skeleton uses a subset of [Foundation](http://foundation.zurb.com/) (v5) CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
