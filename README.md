@@ -115,3 +115,44 @@
 {
   "status": true
 }
+```
+
+### POST `/api/event_date_users/<user_id>`
+候補日に対してユーザーが出席できるかどうかを登録するAPI
+
+#### Request Body
+
+```json
+{
+  "event_id": 1,
+  "status": 1
+}
+```
+
+#### Response Body
+
+```json
+{
+  "status": true
+}
+```
+
+### UPDATE `/api/event_date_users/<user_id>`
+候補日に対してユーザーが出席できるかどうかの更新をするAPI
+
+#### Request Body
+
+```json
+{
+  "event_id": 1,
+  "status": 1
+}
+```
+
+#### Response Body
+
+```json
+{
+  "status": true
+}
+```
