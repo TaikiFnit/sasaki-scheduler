@@ -46,8 +46,9 @@ class EventDatesTable extends Table
             'foreignKey' => 'event_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('EventDateUsers', [
-            'foreignKey' => 'event_date_id'
+        
+        $this->belongsToMany('Users', [
+            'through' => 'EventDateUsers'
         ]);
     }
 

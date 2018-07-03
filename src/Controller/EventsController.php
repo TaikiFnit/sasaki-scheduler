@@ -28,7 +28,9 @@ class EventsController extends AppController
     {
         //$events = TableRegistry::getTableLocator()->get('events');
         $events = $this->Events->find('all', ['contain' => 
-            ['EventTypes', 'Users']]);
+            ['EventTypes', 'Users', 'EventDates' => function($q) {
+                return $q->contain(['Users']);
+            } ]]);
         $this->set('events', $events);
         $this->set('_serialize', 'events');
     }
