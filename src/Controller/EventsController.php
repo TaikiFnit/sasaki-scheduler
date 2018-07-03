@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Events Controller
@@ -12,6 +13,11 @@ use App\Controller\AppController;
  */
 class EventsController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('RequestHandler');
+    }
 
     /**
      * Index method
@@ -20,12 +26,11 @@ class EventsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['EventTypes']
-        ];
-        $events = $this->paginate($this->Events);
-
-        $this->set(compact('events'));
+        //$events = TableRegistry::getTableLocator()->get('events');
+        $events = $this->Events->find('all', ['contain' => 
+            ['EventTypes', 'Users']]);
+        $this->set('events', $events);
+        $this->set('_serialize', 'events');
     }
 
     /**
@@ -42,6 +47,7 @@ class EventsController extends AppController
         ]);
 
         $this->set('event', $event);
+        $this->set('_serialize', 'event');
     }
 
     /**
@@ -55,14 +61,14 @@ class EventsController extends AppController
         if ($this->request->is('post')) {
             $event = $this->Events->patchEntity($event, $this->request->getData());
             if ($this->Events->save($event)) {
-                $this->Flash->success(__('The event has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+                // save succeed
+                $this->set('event', $event);
+                $this->set('_serialize', 'event');
             }
-            $this->Flash->error(__('The event could not be saved. Please, try again.'));
+            // save failed
+            $this->set('status', ["status" => false]);
+            $this->set('_serialize', 'status');
         }
-        $eventTypes = $this->Events->EventTypes->find('list', ['limit' => 200]);
-        $this->set(compact('event', 'eventTypes'));
     }
 
     /**

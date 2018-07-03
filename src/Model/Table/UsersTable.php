@@ -45,8 +45,8 @@ class UsersTable extends Table
         $this->hasMany('EventDateUsers', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('EventUsers', [
-            'foreignKey' => 'user_id'
+        $this->belongsToMany('Events', [
+            'through' => 'EventUsers'
         ]);
     }
 

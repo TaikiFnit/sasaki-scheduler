@@ -26,7 +26,12 @@ class CreateUsers extends AbstractMigration
         $table->addColumn('token', 'string', [
             'default' => null,
             'limit' => 255,
-            'null' => false,
+            'null' => true,
+        ]);
+        $table->addColumn('auth_id', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
         ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
