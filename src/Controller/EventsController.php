@@ -29,10 +29,12 @@ class EventsController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
 
-        $events = $this->Events->find('all', ['contain' => 
-            ['EventTypes', 'Users', 'EventDates' => function($q) {
-                return $q->contain(['Users']);
-            } ]]);
+        $events = $this->Events->find('all',
+            ['contain' =>
+                ['EventTypes', 'Users', 'EventDates' => function ($q) {
+                    return $q->contain(['EventDateUsers']);
+                }]]);
+
         $this->set('events', $events);
         $this->set('_serialize', 'events');
         $this->response->body(json_encode($events));
@@ -47,12 +49,17 @@ class EventsController extends AppController
      */
     public function view($id = null)
     {
-        $event = $this->Events->get($id, [
-            'contain' => ['EventTypes', 'EventDates', 'EventUsers']
-        ]);
+        $this->autoRender = false;
+        $this->response->type('application/json');
+
+        $event = $this->Events->get($id, ['contain' =>
+            ['EventTypes', 'Users', 'EventDates' => function ($q) {
+                return $q->contain(['EventDateUsers']);
+            }]]);
 
         $this->set('event', $event);
         $this->set('_serialize', 'event');
+        $this->response->body(json_encode($event));
     }
 
     /**
@@ -65,7 +72,6 @@ class EventsController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
 
-
         $event = $this->Events->newEntity();
         if ($this->request->is('post')) {
             $event = $this->Events->patchEntity($event, $this->request->getData());
@@ -74,8 +80,8 @@ class EventsController extends AppController
 
                 // store dates associated events if needed
                 $eventDatesTable = TableRegistry::get('EventDates');
-                if ( isset($this->request->getData()["dates"]) ) {
-                    foreach($this->request->getData()["dates"] as $date) {
+                if (isset($this->request->getData()["dates"])) {
+                    foreach ($this->request->getData()["dates"] as $date) {
                         $eventDate = $eventDatesTable->newEntity();
                         $eventDate->event_id = $event->id;
                         $eventDate->prospective_date = $date["prospective_date"];
@@ -87,8 +93,8 @@ class EventsController extends AppController
 
                 // store users associated events
                 $eventUserTable = TableRegistry::get('EventUsers');
-                if ( isset($this->request->getData()["user_ids"]) ) {
-                    foreach($this->request->getData()["user_ids"] as $user_id) {
+                if (isset($this->request->getData()["user_ids"])) {
+                    foreach ($this->request->getData()["user_ids"] as $user_id) {
                         $eventUser = $eventUserTable->newEntity();
                         $eventUser->user_id = $user_id;
                         $eventUser->event_id = $event->id;
@@ -119,20 +125,25 @@ class EventsController extends AppController
      */
     public function edit($id = null)
     {
+        $this->autoRender = false;
+        $this->response->type('application/json');
+
         $event = $this->Events->get($id, [
-            'contain' => []
+            'contain' => [],
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $event = $this->Events->patchEntity($event, $this->request->getData());
             if ($this->Events->save($event)) {
-                $this->Flash->success(__('The event has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+                $result = ["status" => true];
+            } else {
+                $result = ["status" => false];
             }
-            $this->Flash->error(__('The event could not be saved. Please, try again.'));
         }
-        $eventTypes = $this->Events->EventTypes->find('list', ['limit' => 200]);
-        $this->set(compact('event', 'eventTypes'));
+
+        $this->set('status', $result);
+        $this->set('_serializer', 'status');
+        $this->response->body(json_encode($result));
     }
 
     /**
@@ -144,14 +155,20 @@ class EventsController extends AppController
      */
     public function delete($id = null)
     {
+        $this->autoRender = false;
+        $this->response->type('application/json');
+
         $this->request->allowMethod(['post', 'delete']);
         $event = $this->Events->get($id);
+
         if ($this->Events->delete($event)) {
-            $this->Flash->success(__('The event has been deleted.'));
+            $result = ["status" => true];
         } else {
-            $this->Flash->error(__('The event could not be deleted. Please, try again.'));
+            $result = ["status" => false];
         }
 
-        return $this->redirect(['action' => 'index']);
+        $this->set('status', $result);
+        $this->set('_serializer', 'status');
+        $this->response->body(json_encode($result));
     }
 }

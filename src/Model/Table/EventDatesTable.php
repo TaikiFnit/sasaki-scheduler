@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -44,11 +43,12 @@ class EventDatesTable extends Table
 
         $this->belongsTo('Events', [
             'foreignKey' => 'event_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
-        
+
+        $this->hasMany('EventDateUsers');
         $this->belongsToMany('Users', [
-            'through' => 'EventDateUsers'
+            'through' => 'EventDateUsers',
         ]);
     }
 
