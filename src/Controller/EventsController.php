@@ -26,13 +26,16 @@ class EventsController extends AppController
      */
     public function index()
     {
-        //$events = TableRegistry::getTableLocator()->get('events');
+        $this->autoRender = false;
+        $this->response->type('application/json');
+
         $events = $this->Events->find('all', ['contain' => 
             ['EventTypes', 'Users', 'EventDates' => function($q) {
                 return $q->contain(['Users']);
             } ]]);
         $this->set('events', $events);
         $this->set('_serialize', 'events');
+        $this->response->body(json_encode($events));
     }
 
     /**
@@ -59,18 +62,39 @@ class EventsController extends AppController
      */
     public function add()
     {
+        $this->autoRender = false;
+        $this->response->type('application/json');
+
+
         $event = $this->Events->newEntity();
         if ($this->request->is('post')) {
             $event = $this->Events->patchEntity($event, $this->request->getData());
             if ($this->Events->save($event)) {
                 // save succeed
-                $this->set('event', $event);
-                $this->set('_serialize', 'event');
+
+                // store dates associated events if needed
+                $eventDatesTable = TableRegistry::get('EventDates');
+                if ( isset($this->request->getData()["dates"]) ) {
+                    foreach($this->request->getData()["dates"] as $date) {
+                        $eventDate = $eventDatesTable->newEntity();
+                        $eventDate->event_id = $event->id;
+                        $eventDate->prospective_date = $date["prospective_date"];
+                        $eventDate->prospective_time = $date["prospective_time"];
+
+                        $eventDatesTable->save($eventDate);
+                    }
+                }
+
+                $result = ["status" => true];
+            } else {
+                // save failed
+                $result = ["status" => false];
             }
-            // save failed
-            $this->set('status', ["status" => false]);
-            $this->set('_serialize', 'status');
         }
+
+        $this->set('status', $result);
+        $this->set('_serializer', 'status');
+        $this->response->body(json_encode($result));
     }
 
     /**
