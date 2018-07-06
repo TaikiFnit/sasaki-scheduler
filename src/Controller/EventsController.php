@@ -85,6 +85,19 @@ class EventsController extends AppController
                     }
                 }
 
+                // store users associated events
+                $eventUserTable = TableRegistry::get('EventUsers');
+                if ( isset($this->request->getData()["user_ids"]) ) {
+                    foreach($this->request->getData()["user_ids"] as $user_id) {
+                        $eventUser = $eventUserTable->newEntity();
+                        $eventUser->user_id = $user_id;
+                        $eventUser->event_id = $event->id;
+                        $eventUser->invited = true;
+
+                        $eventUserTable->save($eventUser);
+                    }
+                }
+
                 $result = ["status" => true];
             } else {
                 // save failed
