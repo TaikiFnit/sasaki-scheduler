@@ -7,6 +7,7 @@
 * id: integer
 * email: string
 * name: string
+* grade: integer
 * google_id: string
 * google_token: string # for google login
 * created: date

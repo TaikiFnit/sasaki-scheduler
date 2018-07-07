@@ -21,6 +21,7 @@ class EventDateUsersController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $eventDateUser = $this->EventDateUsers->newEntity();
         if ($this->request->is('post')) {
@@ -51,6 +52,7 @@ class EventDateUsersController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $this->request->allowMethod(['post', 'delete']);
         $eventDateUser = $this->EventDateUsers->get($id);

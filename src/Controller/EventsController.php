@@ -28,6 +28,7 @@ class EventsController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $events = $this->Events->find('all',
             ['contain' =>
@@ -51,6 +52,7 @@ class EventsController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $event = $this->Events->get($id, ['contain' =>
             ['EventTypes', 'Users', 'EventDates' => function ($q) {
@@ -71,6 +73,7 @@ class EventsController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $event = $this->Events->newEntity();
         if ($this->request->is('post')) {
@@ -127,6 +130,7 @@ class EventsController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $event = $this->Events->get($id, [
             'contain' => [],
@@ -157,6 +161,7 @@ class EventsController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
         $this->request->allowMethod(['post', 'delete']);
         $event = $this->Events->get($id);
