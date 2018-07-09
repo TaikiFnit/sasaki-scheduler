@@ -1,6 +1,8 @@
 <?php
+$db = parse_url(env('CLEARDB_DATABASE_URL'));
 return [
     'debug' => false,
+
     'App' => [
         'namespace' => 'SasakiScheduler',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
