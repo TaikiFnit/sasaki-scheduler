@@ -3,33 +3,29 @@ $db = parse_url(env('CLEARDB_DATABASE_URL'));
 return [
     'debug' => false,
 
-    'App' => [
-        'namespace' => 'SasakiScheduler',
-        'encoding' => env('APP_ENCODING', 'UTF-8'),
-        'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),
-        'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
-        'base' => false,
-        'dir' => 'src',
-        'webroot' => 'webroot',
-        'wwwRoot' => WWW_ROOT,
-        //'baseUrl' => env('SCRIPT_NAME'),
-        'fullBaseUrl' => false,
-        'imageBaseUrl' => 'img/',
-        'cssBaseUrl' => 'css/',
-        'jsBaseUrl' => 'js/',
-        'paths' => [
-            'plugins' => [ROOT . DS . 'plugins' . DS],
-            'templates' => [APP . 'Template' . DS],
-            'locales' => [APP . 'Locale' . DS],
-        ],
-    ],
+    // 'App' => [
+    //     'namespace' => 'SasakiScheduler',
+    //     'encoding' => env('APP_ENCODING', 'UTF-8'),
+    //     'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),
+    //     'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
+    //     'base' => false,
+    //     'dir' => 'src',
+    //     'webroot' => 'webroot',
+    //     'wwwRoot' => WWW_ROOT,
+    //     //'baseUrl' => env('SCRIPT_NAME'),
+    //     'fullBaseUrl' => false,
+    //     'imageBaseUrl' => 'img/',
+    //     'cssBaseUrl' => 'css/',
+    //     'jsBaseUrl' => 'js/',
+    //     'paths' => [
+    //         'plugins' => [ROOT . DS . 'plugins' . DS],
+    //         'templates' => [APP . 'Template' . DS],
+    //         'locales' => [APP . 'Locale' . DS],
+    //     ],
+    // ],
 
     'Security' => [
         'salt' => env('SALT'),
-    ],
-
-    'Asset' => [
-        //'timestamp' => true,
     ],
 
     'Cache' => [
@@ -70,13 +66,13 @@ return [
         ],
     ],
 
-    'Error' => [
-        'errorLevel' => E_ALL,
-        'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
-        'skipLog' => [],
-        'log' => true,
-        'trace' => true,
-    ],
+    // 'Error' => [
+    //     'errorLevel' => E_ALL,
+    //     'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
+    //     'skipLog' => [],
+    //     'log' => true,
+    //     'trace' => true,
+    // ],
 
     'EmailTransport' => [
         'default' => [
@@ -95,14 +91,14 @@ return [
         ],
     ],
 
-    'Email' => [
-        'default' => [
-            'transport' => 'default',
-            'from' => 'you@localhost',
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
-        ],
-    ],
+    // 'Email' => [
+    //     'default' => [
+    //         'transport' => 'default',
+    //         'from' => 'you@localhost',
+    //         //'charset' => 'utf-8',
+    //         //'headerCharset' => 'utf-8',
+    //     ],
+    // ],
 
     'Datasources' => [
         'default' => [
@@ -113,32 +109,11 @@ return [
             'username' => $db['user'],
             'password' => $db['pass'],
             'database' => substr($db['path'], 1),
-            'timezone' => 'UTC',
+            // 'timezone' => 'UTC',
             'flags' => [],
             'cacheMetadata' => true,
             'log' => false,
             'quoteIdentifiers' => false,
-        ],
-
-        /**
-         * The test connection is used during the test suite.
-         */
-        'test' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'test_myapp',
-            //'encoding' => 'utf8mb4',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
-            'log' => false,
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-            'url' => env('DATABASE_TEST_URL', null),
         ],
     ],
 
