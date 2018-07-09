@@ -107,7 +107,12 @@ class EventsController extends AppController
                     }
                 }
 
-                $result = ["status" => true];
+                $eventAsResponse = $this->Events->get($event->id, ['contain' =>
+                    ['EventTypes', 'Users', 'EventDates' => function ($q) {
+                        return $q->contain(['EventDateUsers']);
+                    }]]);
+
+                $result = ["status" => true, "event" => $eventAsResponse];
             } else {
                 // save failed
                 $result = ["status" => false];

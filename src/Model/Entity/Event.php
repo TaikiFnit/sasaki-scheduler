@@ -34,11 +34,12 @@ class Event extends Entity
         'title' => true,
         'description' => true,
         'locale' => true,
+        'deadline' => true,
         'event_type_id' => true,
         'created' => true,
         'modified' => true,
         'event_type' => true,
         'event_dates' => true,
-        'event_users' => true
+        'event_users' => true,
     ];
 }
