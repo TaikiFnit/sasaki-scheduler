@@ -1,9 +1,9 @@
 # Sasaki Scheduler
 
-API Server: https://sasaki-scheduler.herokuapp.com/
-API Mock Server: https://25d13173-dfe1-498e-9f0f-0f0e8f79ca91.mock.pstmn.io
-API stubs: https://documenter.getpostman.com/view/548209/RWM8UCFR  
-Client: https://github.com/TaikiFnit/sasaki-scheduler-client
+* API Server: https://sasaki-scheduler.herokuapp.com/
+* API Mock Server: https://25d13173-dfe1-498e-9f0f-0f0e8f79ca91.mock.pstmn.io
+* API stubs: https://documenter.getpostman.com/view/548209/RWM8UCFR  
+* Client: https://github.com/TaikiFnit/sasaki-scheduler-client
 
 ## APIs 
 
