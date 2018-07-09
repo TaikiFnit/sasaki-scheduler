@@ -14,7 +14,6 @@
  */
 namespace App\Controller;
 
-use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
@@ -40,30 +39,14 @@ class PagesController extends AppController
      */
     public function display(...$path)
     {
-        $count = count($path);
-        if (!$count) {
-            return $this->redirect('/');
-        }
-        if (in_array('..', $path, true) || in_array('.', $path, true)) {
-            throw new ForbiddenException();
-        }
-        $page = $subpage = null;
+        $this->autoRender = false;
+        $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
-        if (!empty($path[0])) {
-            $page = $path[0];
-        }
-        if (!empty($path[1])) {
-            $subpage = $path[1];
-        }
-        $this->set(compact('page', 'subpage'));
+        $result = ['status' => true, "message" => "Welcome to Sasaki-Scheduler backend. This is API Server responded as JSON. check our routing on github. thanks!"];
 
-        try {
-            $this->render(implode('/', $path));
-        } catch (MissingTemplateException $exception) {
-            if (Configure::read('debug')) {
-                throw $exception;
-            }
-            throw new NotFoundException();
-        }
+        $this->set('status', $result);
+        $this->set('_serializer', 'status');
+        $this->response->body(json_encode($result));
     }
 }
