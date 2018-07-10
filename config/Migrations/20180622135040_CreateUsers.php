@@ -18,21 +18,41 @@ class CreateUsers extends AbstractMigration
             'limit' => 255,
             'null' => false,
         ]);
+        $table->addColumn('family_name', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
+        $table->addColumn('given_name', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
+        $table->addColumn('picture', 'string', [
+            'default' => null,
+            'limit' => 512,
+            'null' => true,
+        ]);
         $table->addColumn('email', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
         ]);
-        $table->addColumn('token', 'string', [
+        $table->addColumn('token_id', 'text', [
             'default' => null,
-            'limit' => 255,
             'null' => true,
         ]);
-        $table->addColumn('auth_id', 'string', [
+        $table->addColumn('google_id', 'string', [
             'default' => null,
-            'limit' => 255,
+            'limit' => 512,
             'null' => true,
         ]);
+        $table->addColumn('access_token', 'string', [
+            'default' => null,
+            'limit' => 512,
+            'null' => true,
+        ]);
+
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

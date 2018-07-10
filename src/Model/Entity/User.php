@@ -30,12 +30,17 @@ class User extends Entity
      */
     protected $_accessible = [
         'name' => true,
+        'family_name' => true,
+        'given_name' => true,
+        'picture' => true,
         'email' => true,
-        'token' => true,
+        'token_id' => true,
+        'google_id' => true,
+        'access_token' => true,
         'created' => true,
         'modified' => true,
         'event_date_users' => true,
-        'event_users' => true
+        'event_users' => true,
     ];
 
     /**
@@ -44,6 +49,6 @@ class User extends Entity
      * @var array
      */
     protected $_hidden = [
-        'token'
+        'token',
     ];
 }

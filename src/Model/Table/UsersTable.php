@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -37,16 +36,17 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('users');
+
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
         $this->hasMany('EventDateUsers', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('Events', [
-            'through' => 'EventUsers'
+            'through' => 'EventUsers',
         ]);
     }
 
@@ -69,16 +69,33 @@ class UsersTable extends Table
             ->notEmpty('name');
 
         $validator
+            ->scalar('family_name')
+            ->maxLength('family_name', 255);
+
+        $validator
+            ->scalar('given_name')
+            ->maxLength('given_name', 255);
+
+        $validator
+            ->scalar('picture')
+            ->maxLength('picture', 255);
+
+        $validator
             ->email('email')
             ->requirePresence('email', 'create')
             ->notEmpty('email')
             ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->scalar('token')
-            ->maxLength('token', 255)
-            ->requirePresence('token', 'create')
-            ->notEmpty('token');
+            ->scalar('token_id');
+
+        $validator
+            ->scalar('google_id')
+            ->maxLength('google_id', 512);
+
+        $validator
+            ->scalar('access_token')
+            ->maxLength('access_token', 512);
 
         return $validator;
     }
