@@ -73,6 +73,42 @@
 }
 ```
 
+### POST `/users`
+
+ClientでGoogle OAuthしたtoken情報をDBにStoreする
+
+#### Request Body
+
+```json
+{
+    "googleId": "123456789...",
+    "tokenId": "token",
+    "accessToken": "access_token",
+    "email": "g031@s.iwate"
+    }
+```
+
+#### Response Body 
+
+```json
+{
+  "status" : true,
+  "user": {
+    "id":1,
+    "name":"TaikiFnit",
+    "family_name":"Fnit",
+    "given_name":"Taiki",
+    "picture":"https://photo.jpg",
+    "email":"g031o@s.iwate-pu",
+    "token_id":"eyJhbGciOiz",
+    "google_id":"111796",
+    "access_token":"ya29.Glz0BUi_d3mtkApzPQ",
+    "created":"2018-07-10T03:24:55+00:00",
+    "modified":"2018-07-10T03:27:24+00:00"
+  }
+}
+```
+
 ### POST `/api/event_date_users/<user_id>`
 
 候補日に対してユーザーが出席できるかどうかを登録する API
