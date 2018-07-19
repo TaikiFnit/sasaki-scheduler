@@ -65,7 +65,7 @@
 }
 ```
 
-### Resposne Body
+#### Resposne Body
 
 ```json
 {
@@ -109,7 +109,47 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 }
 ```
 
-### POST `/api/event_date_users/<user_id>`
+### GET `/api/event_date_users/<access_token>`
+ 
+ユーザーが入力した出席登録を取得するAPI 
+
+#### Request Body
+
+```json
+{
+  "event_id": 1
+}
+```
+
+#### Response Body
+
+```json
+{
+    "status": true,
+    "event_date_users": [
+        {
+            "id": 1,
+            "event_date_id": 1,
+            "user_id": 1,
+            "status": 1,
+            "created": "2018-07-13T06:11:24+00:00",
+            "modified": "2018-07-13T06:11:24+00:00"
+        },
+        {
+            "id": 7,
+            "event_date_id": 2,
+            "user_id": 1,
+            "status": 2,
+            "created": "2018-07-17T08:43:00+00:00",
+            "modified": "2018-07-17T08:43:00+00:00"
+        }
+    ]
+}
+```
+
+
+
+### POST `/api/event_date_users/add?access_token=<access_token>`
 
 候補日に対してユーザーが出席できるかどうかを登録する API
 
@@ -126,11 +166,19 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 
 ```json
 {
-  "status": true
+  "status": true,
+  "event_date_user": {
+    "id": 4,
+    "user_id": 1,
+    "event_date_id": 1,
+    "status": 1,
+    "created": "2018-07-17T07:29:38+00:00",
+    "modified": "2018-07-17T07:29:38+00:00"
+  }
 }
 ```
 
-### UPDATE `/api/event_date_users/<user_id>`
+### REMOVE `/api/event_date_users?=access_token=<access_token>`
 
 候補日に対してユーザーが出席できるかどうかの更新をする API
 
@@ -138,8 +186,7 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 
 ```json
 {
-  "event_id": 1,
-  "status": 1
+  "event_id": 1
 }
 ```
 
