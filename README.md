@@ -109,6 +109,17 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 }
 ```
 
+### GET `/users/view/:access_token`
+
+Access Token をもとに, ユーザーIDを含むユーザー情報を返す. 
+
+### Response Body
+
+```
+
+
+```
+
 ### GET `/api/event_date_users/<access_token>`
  
 ユーザーが入力した出席登録を取得するAPI 
@@ -149,7 +160,7 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 
 
 
-### POST `/api/event_date_users/add?access_token=<access_token>`
+### POST `/api/event_date_users/add/:event_date_id?access_token=<access_token>`
 
 候補日に対してユーザーが出席できるかどうかを登録する API
 
@@ -157,7 +168,6 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 
 ```json
 {
-  "event_id": 1,
   "status": 1
 }
 ```
@@ -178,17 +188,10 @@ ClientでGoogle OAuthしたtoken情報をDBにStoreする
 }
 ```
 
-### REMOVE `/api/event_date_users?=access_token=<access_token>`
+### DELETE `/api/event_date_users/:event_date_userid?=access_token=<access_token>`
 
-候補日に対してユーザーが出席できるかどうかの更新をする API
+ユーザーが登録した出席状況を削除する API
 
-#### Request Body
-
-```json
-{
-  "event_id": 1
-}
-```
 
 #### Response Body
 

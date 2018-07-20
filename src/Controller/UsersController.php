@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Http\Client;
 
 /**
  * Users Controller
@@ -36,6 +35,7 @@ class UsersController extends AppController
         $accessToken = $this->request->getData()["accessToken"];
 
         $res = $this->fetchUserData($tokenId);
+
         if (strcmp($email, $res['email']) != 0) {
             $this->response->body(json_encode(['status' => "fa"]));
             return;
@@ -58,7 +58,8 @@ class UsersController extends AppController
                 'access_token' => $accessToken,
             ]);
             if ($this->Users->save($user)) {
-                $result = ["status" => true, 'user' => $user];
+                $joinedUser = $this->Users->find()->contain(['Events', 'EventDateUsers'])->where(['id' => $user->id])->first();
+                $result = ["status" => true, 'user' => $joinedUser];
             } else {
                 $result = ["status" => false];
             }
@@ -78,85 +79,23 @@ class UsersController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($access_token = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => ['Events', 'EventDateUsers'],
-        ]);
+        $this->autoRender = false;
+        $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
 
-        $this->set('user', $user);
-    }
+        $fetchedUser = $this->fetchUserDataByAccessToken($access_token);
 
-    public function fetchUserData($tokenId)
-    {
-        $http = new Client();
-        $response = $http->get('https://www.googleapis.com/oauth2/v3/tokeninfo', ['id_token' => $tokenId]);
-        return $response->json;
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $user = $this->Users->newEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $events = $this->Users->Events->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'events'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => ['Events'],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $events = $this->Users->Events->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'events'));
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+        if (array_key_exists('email', $fetchedUser)) {
+            $user = $this->Users->find('all')->contain(['Events', 'EventDateUsers'])->where(['email' => $fetchedUser['email']])->first();
+            $result = ['status' => true, 'user' => $user];
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $result = ['status' => false, 'message' => "Invalid Access Token"];
         }
 
-        return $this->redirect(['action' => 'index']);
+        $this->set('status', $result);
+        $this->set('_serializer', 'status');
+        $this->response->body(json_encode($result));
     }
 }

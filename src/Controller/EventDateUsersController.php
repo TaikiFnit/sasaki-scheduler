@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Http\Client;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -24,6 +23,7 @@ class EventDateUsersController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
+
         $access_token = $this->request->query['access_token'];
         $fetchedUser = $this->fetchUserDataByAccessToken($access_token);
 
@@ -59,13 +59,6 @@ class EventDateUsersController extends AppController
         // $this->set('event', $user);
         $this->set('_serialize', 'user');
         $this->response->body(json_encode($results));
-    }
-
-    public function fetchUserDataByAccessToken($access_token)
-    {
-        $http = new Client();
-        $response = $http->get('https://www.googleapis.com/oauth2/v3/tokeninfo', ['access_token' => $access_token]);
-        return $response->json;
     }
 
     public function add($id = null)
@@ -114,8 +107,12 @@ class EventDateUsersController extends AppController
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
 
-        $this->request->allowMethod(['post', 'delete']);
+        $access_token = $this->request->query['access_token'];
+        $fetchedUser = $this->fetchUserDataByAccessToken($access_token);
+
+        $this->request->allowMethod(['post', 'delete', 'OPTIONS']);
         $eventDateUser = $this->EventDateUsers->get($id);
+
         if ($this->EventDateUsers->delete($eventDateUser)) {
             $result = ["status" => true];
         } else {

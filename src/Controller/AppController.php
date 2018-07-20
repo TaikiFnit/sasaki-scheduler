@@ -15,7 +15,6 @@
 namespace App\Controller;
 
 use Cake\Controller\Controller;
-use Cake\Event\Event;
 
 /**
  * Application Controller
@@ -25,6 +24,9 @@ use Cake\Event\Event;
  *
  * @link https://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
+
+use Cake\Http\Client;
+
 class AppController extends Controller
 {
 
@@ -51,5 +53,19 @@ class AppController extends Controller
          * see https://book.cakephp.org/3.0/en/controllers/components/security.html
          */
         //$this->loadComponent('Security');
+    }
+
+    public function fetchUserDataByAccessToken($access_token)
+    {
+        $http = new Client();
+        $response = $http->get('https://www.googleapis.com/oauth2/v3/tokeninfo', ['access_token' => $access_token]);
+        return $response->json;
+    }
+
+    public function fetchUserData($tokenId)
+    {
+        $http = new Client();
+        $response = $http->get('https://www.googleapis.com/oauth2/v3/tokeninfo', ['id_token' => $tokenId]);
+        return $response->json;
     }
 }
