@@ -34,7 +34,9 @@ class EventsController extends AppController
             ['contain' =>
                 ['EventTypes', 'Users', 'EventDates' => function ($q) {
                     return $q->contain(['EventDateUsers']);
-                }]]);
+                }],
+            ]
+        );
 
         $this->set('events', $events);
         $this->set('_serialize', 'events');
@@ -56,7 +58,11 @@ class EventsController extends AppController
 
         $event = $this->Events->get($id, ['contain' =>
             ['EventTypes', 'Users', 'EventDates' => function ($q) {
-                return $q->contain(['EventDateUsers']);
+                return $q->contain('EventDateUsers', function ($q2) {
+                    return $q2->contain('Users', function ($user) {
+                        return $user->select(['id', 'name', 'family_name', 'given_name', 'picture', 'email']);
+                    });
+                });
             }]]);
 
         $this->set('event', $event);
