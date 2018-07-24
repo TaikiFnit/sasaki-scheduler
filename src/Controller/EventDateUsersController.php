@@ -53,7 +53,7 @@ class EventDateUsersController extends AppController
 
             $results = ['status' => true, 'event_date_users' => $maped_event_date_user];
         } else {
-            $results = ['status' => true, 'message' => "Invalid access_token"];
+            $results = ['status' => false, 'message' => "Invalid access_token"];
         }
 
         // $this->set('event', $user);
