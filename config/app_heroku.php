@@ -1,5 +1,5 @@
 <?php
-$db = parse_url(env('CLEARDB_DATABASE_URL'));
+$db = parse_url(env('CLEARDB_GOLD_URL'));
 return [
     'debug' => false,
 
