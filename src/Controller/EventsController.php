@@ -81,8 +81,8 @@ class EventsController extends AppController
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
 
-        $event = $this->Events->newEntity();
         if ($this->request->is('post')) {
+            $event = $this->Events->newEntity();
             $event = $this->Events->patchEntity($event, $this->request->getData());
             if ($this->Events->save($event)) {
                 // save succeed
@@ -123,6 +123,12 @@ class EventsController extends AppController
                 // save failed
                 $result = ["status" => false];
             }
+        } else if ($this->request->is('get')) {
+            $eventTypeTable = TableRegistry::get('EventTypes');
+            $userTable = TableRegistry::get('Users');
+            $event_types = $eventTypeTable->find('all');
+            $users = $userTable->find('all')->select(['name', 'family_name', 'given_name', 'picture', 'email', 'grade']);
+            $result = ['status' => true, 'event_types' => $event_types, 'users' => $users];
         }
 
         $this->set('status', $result);

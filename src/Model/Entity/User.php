@@ -34,6 +34,7 @@ class User extends Entity
         'given_name' => true,
         'picture' => true,
         'email' => true,
+        'grade' => true,
         'token_id' => true,
         'google_id' => true,
         'access_token' => true,
