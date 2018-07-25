@@ -70,9 +70,7 @@ class EventDatesTable extends Table
             ->notEmpty('prospective_date');
 
         $validator
-            ->time('prospective_time')
-            ->requirePresence('prospective_time', 'create')
-            ->notEmpty('prospective_time');
+            ->time('prospective_time');
 
         return $validator;
     }

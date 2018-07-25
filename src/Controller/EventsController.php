@@ -29,6 +29,7 @@ class EventsController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
+        $this->response->withHeader('Access-Control-Allow-Origin', '*');
 
         $events = $this->Events->find('all',
             ['contain' =>
@@ -55,6 +56,7 @@ class EventsController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
+        $this->response->withHeader('Access-Control-Allow-Origin', '*');
 
         $event = $this->Events->get($id, ['contain' =>
             ['EventTypes', 'Users', 'EventDates' => function ($q) {
@@ -80,6 +82,7 @@ class EventsController extends AppController
         $this->autoRender = false;
         $this->response->type('application/json');
         $this->response->header("Access-Control-Allow-Origin: *");
+        $this->response->withHeader('Access-Control-Allow-Origin', '*');
 
         if ($this->request->is('post')) {
             $event = $this->Events->newEntity();
@@ -94,7 +97,9 @@ class EventsController extends AppController
                         $eventDate = $eventDatesTable->newEntity();
                         $eventDate->event_id = $event->id;
                         $eventDate->prospective_date = $date["prospective_date"];
-                        $eventDate->prospective_time = $date["prospective_time"];
+                        if (isset($date["prospective_time"])) {
+                            $eventDate->prospective_time = $date["prospective_time"];
+                        }
 
                         $eventDatesTable->save($eventDate);
                     }
@@ -127,7 +132,7 @@ class EventsController extends AppController
             $eventTypeTable = TableRegistry::get('EventTypes');
             $userTable = TableRegistry::get('Users');
             $event_types = $eventTypeTable->find('all');
-            $users = $userTable->find('all')->select(['name', 'family_name', 'given_name', 'picture', 'email', 'grade']);
+            $users = $userTable->find('all')->select(['id', 'name', 'family_name', 'given_name', 'picture', 'email', 'grade']);
             $result = ['status' => true, 'event_types' => $event_types, 'users' => $users];
         }
 

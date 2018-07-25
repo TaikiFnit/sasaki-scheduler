@@ -24,7 +24,7 @@ class CreateEventDates extends AbstractMigration
         ]);
         $table->addColumn('prospective_time', 'time', [
             'default' => null,
-            'null' => false,
+            'null' => true,
         ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
