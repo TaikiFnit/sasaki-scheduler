@@ -18,6 +18,7 @@ class EventTypeSeed extends AbstractSeed
      */
     public function run()
     {
+
         $data = [
             [
                 'name' => '夏合宿',

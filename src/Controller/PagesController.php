@@ -41,7 +41,7 @@ class PagesController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('application/json');
-        $this->response->header("Access-Control-Allow-Origin: *");
+        $this->response->withHeader('Access-Control-Allow-Origin', '*');
 
         $result = ['status' => true, "message" => "Welcome to Sasaki-Scheduler backend. This is API Server responded as JSON. check our routing on github. thanks!"];
 

@@ -129,18 +129,34 @@ class EventsController extends AppController
                 $result = ["status" => true, "event" => $eventAsResponse];
 
                 $emails = [];
+
+                // Emit Emails
+                $userTable = TableRegistry::get('Users');
+                if (isset($this->request->getData()["grades"])) {
+                    foreach ($this->request->getData()["grades"] as $grade) {
+                        $graded_users = $userTable->find('all')->where(['grade' => $grade]);
+
+                        foreach ($graded_users as $graded_user) {
+                            array_push($emails, $graded_user->email);
+                        }
+                    }
+                }
+
                 foreach ($eventAsResponse->users as $user) {
                     array_push($emails, $user->email);
                 }
 
-                $event_prospectives = substr($event_prospectives, 2);
-                $event_detail = "イベントについて\nイベント名: {$event->title}\n概要: {$event->description}\n入力期限日: {$event->deadline}\n候補日: {$event_prospectives}";
+                if (count($emails) != 0) {
+                    $event_prospectives = substr($event_prospectives, 2);
 
-                $email = new Email('default');
-                $email->from(['sasaki.scheduler@gmail.com' => 'Sasaki Scheduler'])
-                    ->to($emails)
-                    ->subject($event->title . ' - 佐々木研で新たなイベントの出席登録が開始されました')
-                    ->send('佐々木研で, ' . $event->title . " の出席登録が開始されました.\n\n http://sasaki-scheduler.surge.sh より, 出席登録を行ってください. \n\n 入力期限日は[" . $event->deadline . "] となっているので, 早めの登録をお願いします.\n\n\n" . $event_detail);
+                    $event_detail = "イベントについて\nイベント名: {$event->title}\n概要: {$event->description}\n入力期限日: {$event->deadline}\n候補日: {$event_prospectives}";
+
+                    $email = new Email('default');
+                    $email->from(['sasaki.scheduler@gmail.com' => 'Sasaki Scheduler'])
+                        ->to($emails)
+                        ->subject($event->title . ' - 佐々木研で新たなイベントの出席登録が開始されました')
+                        ->send('佐々木研で, ' . $event->title . " の出席登録が開始されました.\n\n http://sasaki-scheduler.surge.sh より, 出席登録を行ってください. \n\n 入力期限日は[" . $event->deadline . "] となっているので, 早めの登録をお願いします.\n\n\n" . $event_detail);
+                }
             } else {
                 // save failed
                 $result = ["status" => false];
