@@ -2,9 +2,9 @@
 use Migrations\AbstractSeed;
 
 /**
- * UserSeeder seed.
+ * User seed.
  */
-class UserSeederSeed extends AbstractSeed
+class UserSeed extends AbstractSeed
 {
     /**
      * Run Method.
@@ -167,6 +167,13 @@ class UserSeederSeed extends AbstractSeed
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
+                'name' => '山鹿高明',
+                'grade' => 'B3',
+                'email' => 'g031o153@s.iwate-pu.ac.jp',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
                 'name' => '吉田隆雅',
                 'grade' => 'B3',
                 'email' => 'g031o161@s.iwate-pu.ac.jp',
@@ -195,7 +202,8 @@ class UserSeederSeed extends AbstractSeed
                 'modified' => date('Y-m-d H:i:s'),
             ],
         ];
-        $table = $this->table('user_seeders');
+
+        $table = $this->table('users');
         $table->insert($data)->save();
     }
 }

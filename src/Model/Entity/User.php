@@ -50,6 +50,8 @@ class User extends Entity
      * @var array
      */
     protected $_hidden = [
-        'token',
+        'token_id',
+        'google_id',
+        'access_token',
     ];
 }

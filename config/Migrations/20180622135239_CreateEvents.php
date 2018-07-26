@@ -19,14 +19,14 @@ class CreateEvents extends AbstractMigration
             'null' => false,
         ]);
         $table->addColumn('description', 'string', [
-            'default' => null,
+            'default' => "",
             'limit' => 255,
-            'null' => false,
+            'null' => true,
         ]);
         $table->addColumn('locale', 'string', [
-            'default' => null,
+            'default' => "未指定",
             'limit' => 255,
-            'null' => false,
+            'null' => true,
         ]);
         $table->addColumn('event_type_id', 'integer', [
             'default' => null,

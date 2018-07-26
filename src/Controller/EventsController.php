@@ -121,33 +121,41 @@ class EventsController extends AppController
                     }
                 }
 
-                $eventAsResponse = $this->Events->get($event->id, ['contain' =>
-                    ['EventTypes', 'Users', 'EventDates' => function ($q) {
-                        return $q->contain(['EventDateUsers']);
-                    }]]);
-
-                $result = ["status" => true, "event" => $eventAsResponse];
-
                 $emails = [];
-
-                // Emit Emails
                 $userTable = TableRegistry::get('Users');
                 if (isset($this->request->getData()["grades"])) {
                     foreach ($this->request->getData()["grades"] as $grade) {
                         $graded_users = $userTable->find('all')->where(['grade' => $grade]);
 
                         foreach ($graded_users as $graded_user) {
+                            $eventUser = $eventUserTable->newEntity();
+                            $eventUser->user_id = $graded_user->id;
+                            $eventUser->event_id = $event->id;
+                            $eventUser->invited = true;
+
+                            $eventUserTable->save($eventUser);
                             array_push($emails, $graded_user->email);
                         }
                     }
                 }
 
+                $eventAsResponse = $this->Events->get($event->id, ['contain' =>
+                    ['EventTypes', 'Users', 'EventDates' => function ($q) {
+                        return $q->contain(['EventDateUsers']);
+                    }]]);
+
                 foreach ($eventAsResponse->users as $user) {
                     array_push($emails, $user->email);
                 }
 
+                $result = ["status" => true, "event" => $eventAsResponse];
+
                 if (count($emails) != 0) {
-                    $event_prospectives = substr($event_prospectives, 2);
+                    if (strlen($event_prospectives) > 2) {
+                        $event_prospectives = substr($event_prospectives, 2);
+                    } else {
+
+                    }
 
                     $event_detail = "イベントについて\nイベント名: {$event->title}\n概要: {$event->description}\n入力期限日: {$event->deadline}\n候補日: {$event_prospectives}";
 
@@ -155,7 +163,7 @@ class EventsController extends AppController
                     $email->from(['sasaki.scheduler@gmail.com' => 'Sasaki Scheduler'])
                         ->to($emails)
                         ->subject($event->title . ' - 佐々木研で新たなイベントの出席登録が開始されました')
-                        ->send('佐々木研で, ' . $event->title . " の出席登録が開始されました.\n\n http://sasaki-scheduler.surge.sh より, 出席登録を行ってください. \n\n 入力期限日は[" . $event->deadline . "] となっているので, 早めの登録をお願いします.\n\n\n" . $event_detail);
+                        ->send('佐々木研で, ' . $event->title . " の出席登録が開始されました.\n\n https://sasaki-scheduler.surge.sh より, 出席登録を行ってください. \n\n 入力期限日は[" . $event->deadline . "] となっているので, 早めの登録をお願いします.\n\n\n" . $event_detail);
                 }
             } else {
                 // save failed
@@ -166,7 +174,8 @@ class EventsController extends AppController
             $userTable = TableRegistry::get('Users');
             $event_types = $eventTypeTable->find('all');
             $users = $userTable->find('all')->select(['id', 'name', 'family_name', 'given_name', 'picture', 'email', 'grade']);
-            $result = ['status' => true, 'event_types' => $event_types, 'users' => $users];
+            $grades = ['T', 'M2', 'M1', 'B4', 'B3', 'B2', 'B1'];
+            $result = ['status' => true, 'event_types' => $event_types, 'users' => $users, 'grades' => $grades];
         }
 
         $this->set('status', $result);
