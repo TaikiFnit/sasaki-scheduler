@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -90,6 +91,7 @@ class EventsController extends AppController
             if ($this->Events->save($event)) {
                 // save succeed
 
+                $event_prospectives = "";
                 // store dates associated events if needed
                 $eventDatesTable = TableRegistry::get('EventDates');
                 if (isset($this->request->getData()["dates"])) {
@@ -102,6 +104,7 @@ class EventsController extends AppController
                         }
 
                         $eventDatesTable->save($eventDate);
+                        $event_prospectives = $event_prospectives . ", {$date["prospective_date"]}";
                     }
                 }
 
@@ -124,6 +127,20 @@ class EventsController extends AppController
                     }]]);
 
                 $result = ["status" => true, "event" => $eventAsResponse];
+
+                $emails = [];
+                foreach ($eventAsResponse->users as $user) {
+                    array_push($emails, $user->email);
+                }
+
+                $event_prospectives = substr($event_prospectives, 2);
+                $event_detail = "イベントについて\nイベント名: {$event->title}\n概要: {$event->description}\n入力期限日: {$event->deadline}\n候補日: {$event_prospectives}";
+
+                $email = new Email('default');
+                $email->from(['sasaki.scheduler@gmail.com' => 'Sasaki Scheduler'])
+                    ->to($emails)
+                    ->subject($event->title . ' - 佐々木研で新たなイベントの出席登録が開始されました')
+                    ->send('佐々木研で, ' . $event->title . " の出席登録が開始されました.\n\n http://sasaki-scheduler.surge.sh より, 出席登録を行ってください. \n\n 入力期限日は[" . $event->deadline . "] となっているので, 早めの登録をお願いします.\n\n\n" . $event_detail);
             } else {
                 // save failed
                 $result = ["status" => false];
