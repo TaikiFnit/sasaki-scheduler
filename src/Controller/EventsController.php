@@ -250,4 +250,64 @@ class EventsController extends AppController
         $this->set('_serializer', 'status');
         $this->response->body(json_encode($result));
     }
+
+    public function remind()
+    {
+        $this->autoRender = false;
+        $this->response->type('application/json');
+        $this->response->header("Access-Control-Allow-Origin: *");
+
+        $deadlinedEvents = $this->Events->find('all')->where(['DATE(deadline)' => date('Y-m-d'), 'should_remind' => true]);
+
+        $array = [];
+        $alreadyJoins = [];
+        $shouldJoins = [];
+
+        foreach ($deadlinedEvents as $deadlinedEvent) {
+            $userTable = TableRegistry::get('Users');
+            $eventUserTable = TableRegistry::get('EventUsers');
+            $eventDateTable = TableRegistry::get('EventDates');
+            $eventDateUserTable = TableRegistry::get('EventDateUsers');
+
+            $sampleEventDate = $eventDateTable->find('all')->where(['event_id' => $deadlinedEvent->id])->first();
+
+            if ($sampleEventDate == null) {
+                continue;
+            }
+
+            // イベントに出席登録している人達の集合
+            $registerdUsers = $eventDateUserTable->find('all')->where(['event_date_id' => $sampleEventDate->id]);
+            $user_ids = array();
+            foreach ($registerdUsers as $registerdUser) {
+                array_push($user_ids, $registerdUser->user_id);
+            }
+
+            array_push($alreadyJoins, $user_ids);
+
+            // イベントに出席すべき人たちの集合
+            if (count($user_ids) != 0) {
+                $deadlinedUsers = $eventUserTable->find('all')->contain(['Users' => function ($user) use ($user_ids) {
+                    return $user->where(['NOT' => ['Users.id IN' => $user_ids]]);
+                }])->where(['event_id' => $deadlinedEvent->id]);
+            } else {
+                $deadlinedUsers = $eventUserTable->find('all')->contain(['Users'])->where(['event_id' => $deadlinedEvent->id]);
+            }
+            array_push($array, $deadlinedUsers);
+
+            foreach ($deadlinedUsers as $deadlinedUser) {
+                // sendRemindMain(to, event);
+                $this->sendRemindMail($deadlinedUser->user->email, $deadlinedEvent);
+            }
+        }
+
+        $this->response->body(json_encode(['should_join' => $shouldJoins, 'alreadyJoin' => $alreadyJoins, 'array' => $array]));
+    }
+
+    private function sendRemindMail($to, $event)
+    {
+        $event_detail = "イベントについて\nイベント名: {$event->title}\n概要: {$event->description}\n入力期限日: {$event->deadline}\n";
+        $subj = "出席登録リマインド: " . $event->title . " イベントの入力期限日は本日までです. ";
+        $email = new Email('default');
+        $email->from(['sasaki.scheduler@gmail.com' => 'Sasaki Scheduler'])->to([$to])->subject($subj)->send('Sasaki Schedulerで出席登録を行っている, ' . $event->title . " の入力期限日が本日までです.\n\n https://sasaki-scheduler.surge.sh/events/" . $event->id . " より, 出席登録を行ってください.\n(このメールはまだ出席登録を行っていない人にのみ送られます. )\n\n\n" . $event_detail);
+    }
 }
