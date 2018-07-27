@@ -172,10 +172,14 @@ class EventsController extends AppController
         } else if ($this->request->is('get')) {
             $eventTypeTable = TableRegistry::get('EventTypes');
             $userTable = TableRegistry::get('Users');
+            $feedbackTable = TableRegistry::get('Feedbacks');
+
             $event_types = $eventTypeTable->find('all');
             $users = $userTable->find('all')->select(['id', 'name', 'family_name', 'given_name', 'picture', 'email', 'grade']);
             $grades = ['T', 'M2', 'M1', 'B4', 'B3', 'B2', 'B1'];
-            $result = ['status' => true, 'event_types' => $event_types, 'users' => $users, 'grades' => $grades];
+            $feedbacks = $feedbackTable->find('all', ['contain' => ['Users']]);
+
+            $result = ['status' => true, 'event_types' => $event_types, 'users' => $users, 'grades' => $grades, 'feedbacks' => $feedbacks];
         }
 
         $this->set('status', $result);

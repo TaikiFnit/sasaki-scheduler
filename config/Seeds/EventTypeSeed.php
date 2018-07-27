@@ -31,7 +31,27 @@ class EventTypeSeed extends AbstractSeed
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'name' => '新歓',
+                'name' => '新入生歓迎会',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => '忘年会',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => '年度末イベント',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => '発表会',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'その他',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
