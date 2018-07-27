@@ -41,5 +41,6 @@ class Event extends Entity
         'event_type' => true,
         'event_dates' => true,
         'event_users' => true,
+        'should_remind' => true,
     ];
 }

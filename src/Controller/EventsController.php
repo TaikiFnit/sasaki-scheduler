@@ -150,7 +150,13 @@ class EventsController extends AppController
 
                 $result = ["status" => true, "event" => $eventAsResponse];
 
-                if (count($emails) != 0) {
+                if (isset($this->request->getData()["should_send"])) {
+                    $should_send = $this->request->getData()["should_send"] == 'true' ? true : false;
+                } else {
+                    $should_send = false;
+                }
+
+                if (count($emails) != 0 && $should_send == true) {
                     if (strlen($event_prospectives) > 2) {
                         $event_prospectives = substr($event_prospectives, 2);
                     } else {
